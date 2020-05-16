@@ -1,0 +1,20 @@
+type Query {
+    bookById(id: ID): Book
+}
+
+"""
+A written or printed work consisting of pages glued or sewn together along one side and bound in covers.
+A book has an [Author](#Author).
+"""
+type Book {
+    id: ID
+    name: String
+    pageCount: Int
+    author: Author
+}
+
+type Author {
+    id: ID
+    firstName: String
+    lastName: String
+}

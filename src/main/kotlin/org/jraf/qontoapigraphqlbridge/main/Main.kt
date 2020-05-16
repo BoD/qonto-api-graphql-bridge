@@ -25,6 +25,7 @@
 
 package org.jraf.qontoapigraphqlbridge.main
 
+import graphql.schema.GraphQLSchema
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.DefaultHeaders
@@ -38,10 +39,15 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import ktor.graphql.config
+import ktor.graphql.graphQL
+import org.jraf.qontoapigraphqlbridge.graphql.QontoApiSchema
 
 private const val DEFAULT_PORT = 8042
 private const val ENV_PORT = "PORT"
 private const val APP_URL = "https://qonto-api-graphql-bridge.herokuapp.com"
+
+val schema: GraphQLSchema = QontoApiSchema().schema
 
 fun main() {
     val listenPort = System.getenv(ENV_PORT)?.toInt() ?: DEFAULT_PORT
@@ -64,6 +70,12 @@ fun main() {
         routing {
             get("/") {
                 call.respondText("<html><body>Hello, World!</body></html>", ContentType.Text.Html.withCharset(Charsets.UTF_8))
+            }
+
+            graphQL("/graphql", schema) {
+                config {
+                    graphiql = true
+                }
             }
         }
     }.start(wait = true)
