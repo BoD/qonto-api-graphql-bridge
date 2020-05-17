@@ -1,20 +1,261 @@
+"""
+The Timestamp scalar type represents the time coordinates of when a certain event
+occurred, with the precision of a thousands of a second.
+"""
+scalar Timestamp
+
+
+"""
+The URL scalar type represents a Uniform Resource Locator as defined by
+[RFC 1738](https://tools.ietf.org/html/rfc1738).
+"""
+scalar URL
+
+
+"""
+A system of money in general use in a particular country or region.
+
+See [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217).
+"""
+enum Currency {
+    EUR
+}
+
+"""
+The side of a transaction (either a debit or a credit).
+"""
+enum TransactionSide {
+    DEBIT
+    CREDIT
+}
+
+
+"""
+A transaction's type of operation.
+"""
+enum TransactionOperationType {
+    TRANSFER
+    CARD
+    DIRECT_DEBIT
+    INCOME
+    QONTO_FEE
+    CHEQUE
+}
+
+
+"""
+Status of a transaction.
+"""
+enum TransactionStatus {
+    PENDING
+    REVERSED
+    DECLINED
+    COMPLETED
+}
+
+
+"""
+Possible VAT rates.
+"""
+enum TransactionVatRate {
+    "A custom rate"
+    CUSTOM
+
+    "0%"
+    ZERO
+
+    "2.1%"
+    _2_1
+
+    "5.5%"
+    _5_5
+
+    "10%"
+    _10
+
+    "20%"
+    _20
+}
+
+
+"""
+An amount of money, among with its currency.
+"""
+type MonetaryAmount {
+    """
+    Note: the amount is represented as a String because floats are not safe to
+    represent amounts of money ([more information here](https://husobee.github.io/money/float/2016/09/23/never-use-floats-for-currency.html)).
+    """
+    amount: String!
+
+    currency: Currency!
+}
+
+
+"""
+Inside Qonto, attachments are files uploaded onto transactions by users.
+Attachments typically correspond to the invoice or receipt, and are used to justify
+the transactions from a bookkeeping standpoint.
+
+**Important**: for security reasons, the url you retrieve for each attachment is only
+valid for 30 minutes.  If you need to download the file after more than 30 minutes,
+you will need to perform another authenticated call in order to generate a new
+download URL.
+"""
+type Attachment {
+    id: ID!
+
+    "Date when this attachment was created"
+    creationDate: Timestamp!
+
+    "File name"
+    fileName: String!
+
+    "Size in bytes"
+    size: Int!
+
+    "Content type, as defined by [RFC 2046](https://tools.ietf.org/html/rfc2046)"
+    contentType: String!
+
+    "The URL where this attachement can be downloaded (valid for 30 minutes)"
+    url: URL!
+}
+
+
+"""
+A label is piece of information that can be attached to a transaction, as a way to
+help bookkeeping.
+
+A label can be linked to another in order to create lists.
+"""
+type Label {
+    id: ID!
+
+    name: String!
+
+    "Optional parent label"
+    parent: Label
+}
+
+
+"""
+A member is a user who's been granted access to the Qonto account of a company.
+There is no limit currently to the number of members a company can have.
+
+Members can be the **initiator** of a transaction.
+
+_Note: in the original Qonto REST API this is called a "membership"._
+"""
+type Member {
+    id: ID!
+
+    "First name"
+    firstName: String!
+
+    "Last name"
+    lastName: String!
+}
+
+
+"""
+Information about the organization.
+"""
+type Organization {
+    id: ID!
+}
+
+
+"""
+A bank account.
+
+The `balance` represents the actual amount of money on the account, in Euros. The `authorizedBalance`
+represents the amount available for payments, taking into account transactions that are being
+processed.
+[More information here](https://support.qonto.eu/hc/en-us/articles/115000493249-How-is-the-balance-of-my-account-calculated-).
+
+"""
+type BankAccount {
+    id: ID!
+
+    "IBAN"
+    iban: String!
+
+    "BIC"
+    bic: String!
+
+    currency: Currency!
+
+    "Amount of money on the account"
+    balance: MonetaryAmount!
+
+    "Amount of money available for payment from the account"
+    authorizedBalance: MonetaryAmount!
+}
+
+
+"""
+Transactions contribute to the bank account's balances (e.g., incomes, transfers, cards).
+"""
+type Transaction {
+    id: ID!
+
+    amount: MonetaryAmount!
+
+    attachments: [Attachment]!
+
+    "Amount in the local currency"
+    localAmount: MonetaryAmount!
+
+    "Side of the transaction (debit or credit)"
+    side: TransactionSide!
+
+    "Operation type"
+    operationType: TransactionOperationType!
+
+    "Counterparty of the transaction (e.g: Amazon)"
+    counterparty: String!
+
+    "Date the transaction impacted the balance of the account"
+    settledDate: Timestamp
+
+    "Date at which the transaction impacted the authorized balance of the account"
+    emittedDate: Timestamp!
+
+    "Date at which the transaction was last updated"
+    updatedDate: Timestamp!
+
+    "Status"
+    status: TransactionStatus!
+
+    "Memo added by the user on the transaction"
+    note: String
+
+    "Message sent along `INCOME`, `TRANSFER` and `DIRECT_DEBIT` transactions"
+    reference: String
+
+    "Amount of VAT filled in on the transaction (or null for no VAT)"
+    vatAmount: MonetaryAmount
+
+    "VAT rate (or null for no VAT)"
+    vatRate: TransactionVatRate
+
+    "The member who initiated the transaction"
+    initiator: Member
+
+    "Labels"
+    labels: [Label]!
+
+    "Indicates if the transaction's attachment was lost (default: false)"
+    isAttachmentLost: Boolean
+
+    "Indicates if the transaction's attachment is required (default: true)"
+    isAttachmentRequired: Boolean
+}
+
+
+"""
+The root of all queries.
+"""
 type Query {
-    bookById(id: ID): Book
-}
-
-"""
-A written or printed work consisting of pages glued or sewn together along one side and bound in covers.
-A book has an [Author](#Author).
-"""
-type Book {
-    id: ID
-    name: String
-    pageCount: Int
-    author: Author
-}
-
-type Author {
-    id: ID
-    firstName: String
-    lastName: String
+    # bookById(id: ID): Book
 }

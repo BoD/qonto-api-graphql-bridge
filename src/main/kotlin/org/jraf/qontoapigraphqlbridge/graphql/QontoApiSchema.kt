@@ -41,8 +41,7 @@ class QontoApiSchema {
     private fun buildSchema(): GraphQLSchema {
         val typeDefinitionRegistry = SchemaParser().parse(getSchemaResourceAsReader())
         val runtimeWiring = buildRuntimeWiring()
-        val schemaGenerator = SchemaGenerator()
-        return schemaGenerator.makeExecutableSchema(typeDefinitionRegistry, runtimeWiring)
+        return SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, runtimeWiring)
     }
 
     private fun getSchemaResourceAsReader() = BufferedReader(
@@ -51,6 +50,8 @@ class QontoApiSchema {
 
     private fun buildRuntimeWiring(): RuntimeWiring {
         return RuntimeWiring.newRuntimeWiring()
+            .scalar(TIMESTAMP_SCALAR)
+            .scalar(URL_SCALAR)
             .type(
                 newTypeWiring("Query")
                     .dataFetcher("bookById", getBookByIdDataFetcher())
