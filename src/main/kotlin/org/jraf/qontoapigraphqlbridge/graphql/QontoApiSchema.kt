@@ -30,6 +30,9 @@ import graphql.schema.idl.RuntimeWiring
 import graphql.schema.idl.SchemaGenerator
 import graphql.schema.idl.SchemaParser
 import graphql.schema.idl.TypeRuntimeWiring.newTypeWiring
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.label.LABELS_DATA_FETCHER
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.member.MEMBERS_DATA_FETCHER
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.ORGANIZATION_DATA_FETCHER
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -54,11 +57,9 @@ class QontoApiSchema {
             .scalar(URL_SCALAR)
             .type(
                 newTypeWiring("Query")
-                    .dataFetcher("bookById", getBookByIdDataFetcher())
-            )
-            .type(
-                newTypeWiring("Book")
-                    .dataFetcher("author", getAuthorDataFetcher())
+                    .dataFetcher("organization", ORGANIZATION_DATA_FETCHER)
+                    .dataFetcher("labels", LABELS_DATA_FETCHER)
+                    .dataFetcher("members", MEMBERS_DATA_FETCHER)
             )
             .build()
     }

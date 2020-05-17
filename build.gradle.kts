@@ -13,6 +13,7 @@ repositories {
     mavenLocal()
     jcenter()
     mavenCentral()
+    maven { setUrl("https://dl.bintray.com/bod/JRAF") }
 }
 
 tasks {
@@ -73,4 +74,7 @@ dependencies {
 
     // Logback
     runtimeOnly("ch.qos.logback:logback-classic:${Versions.LOGBACK}")
+
+    // klibqonto
+    implementation("org.jraf:klibqonto:${Versions.KLIBQONTO}")
 }

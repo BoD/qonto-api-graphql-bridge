@@ -26,13 +26,16 @@
 package org.jraf.qontoapigraphqlbridge.main
 
 import graphql.schema.GraphQLSchema
+import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.withCharset
+import io.ktor.request.header
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -41,6 +44,9 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import ktor.graphql.config
 import ktor.graphql.graphQL
+import org.jraf.qontoapigraphqlbridge.auth.AUTH_KEY
+import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
+import org.jraf.qontoapigraphqlbridge.auth.getAuthenticationInformation
 import org.jraf.qontoapigraphqlbridge.graphql.QontoApiSchema
 
 private const val DEFAULT_PORT = 8042
@@ -69,12 +75,40 @@ fun main() {
 
         routing {
             get("/") {
-                call.respondText("<html><body>Hello, World!</body></html>", ContentType.Text.Html.withCharset(Charsets.UTF_8))
+                call.respondText(
+                    """
+                    <html>
+                    <body>
+                    <h1>Qonto API GraphQL Bridge</h1>
+                    Hello, World!<br>
+                    This bridge allows you to access the <a href="https://api-doc.qonto.eu/2.0/welcome/">Qonto API</a> using GraphQL.<br>
+                    <br>
+                    The GraphQL endpoint is accessible <a href="graphql">here</a><br>.
+                    <br>
+                    More information: <a href="https://github.com/BoD/qonto-api-graphql-bridge">project on Github</a> - Author: <a href="mailto:BoD@JRAF.org">BoD@JRAF.org</a>
+                    </body></html>
+                """, ContentType.Text.Html.withCharset(Charsets.UTF_8)
+                )
             }
 
             graphQL("/graphql", schema) {
                 config {
                     graphiql = true
+                    context = call.getAuthenticationInformation()
+                }
+            }.apply {
+                // Handle authentication
+                intercept(ApplicationCallPipeline.Call) {
+                    val authorizationHeader = call.request.header(HttpHeaders.Authorization)
+                    if (authorizationHeader == null || !authorizationHeader.matches(Regex(".+:.+"))) {
+                        call.respond(
+                            HttpStatusCode.Unauthorized,
+                            "Missing or invalid ${HttpHeaders.Authorization} header, please refer to https://api-doc.qonto.eu/2.0/welcome/authentication"
+                        )
+                        finish()
+                    } else {
+                        call.attributes.put(AUTH_KEY, AuthenticationInformation(authorizationHeader))
+                    }
                 }
             }
         }

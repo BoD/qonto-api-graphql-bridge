@@ -133,8 +133,8 @@ type Label {
 
     name: String!
 
-    "Optional parent label"
-    parent: Label
+    "Optional id of a parent label"
+    parentLabelId: ID
 }
 
 
@@ -254,8 +254,80 @@ type Transaction {
 
 
 """
+A list of label.
+"""
+type LabelConnection {
+    "A list of nodes."
+    nodes: [Label]!
+
+    "Information to aid in pagination."
+    pageInfo: PageInfo!
+
+    "Identifies the total count of items in the connection."
+    totalCount: Int!
+}
+
+
+"""
+A list of members.
+"""
+type MemberConnection {
+    "A list of nodes."
+    nodes: [Member]!
+
+    "Information to aid in pagination."
+    pageInfo: PageInfo!
+
+    "Identifies the total count of items in the connection."
+    totalCount: Int!
+}
+
+
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+    "Index of this page"
+    pageIndex: Int!
+
+    "Index of next page, or null if there are no more items."
+    nextPageIndex: Int
+
+    "Index of previous page, or null if this is the first page."
+    previousPageIndex: Int
+}
+
+
+"""
 The root of all queries.
 """
 type Query {
-    # bookById(id: ID): Book
+    """
+    The organization of the viewer.
+    """
+    organization: Organization
+
+
+    """
+    List of all the label of the viewer's organization.
+    """
+    labels(
+        "Index of the page to retrieve (starts at 1)."
+        pageIndex: Int!
+
+        "Number of items per page."
+        itemsPerPage: Int!
+    ): LabelConnection
+
+
+    """
+    List of all the members of the viewer's organization.
+    """
+    members(
+        "Index of the page to retrieve (starts at 1)."
+        pageIndex: Int!
+
+        "Number of items per page."
+        itemsPerPage: Int!
+    ): MemberConnection
 }
