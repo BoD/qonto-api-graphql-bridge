@@ -330,4 +330,10 @@ type Query {
         "Number of items per page."
         itemsPerPage: Int!
     ): MemberConnection
+
+
+    """
+    List all bank accounts of the viewer's organization.
+    """
+    bankAccounts: [BankAccount]
 }

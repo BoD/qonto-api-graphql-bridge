@@ -29,6 +29,8 @@ import graphql.schema.DataFetchingEnvironment
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
+import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
+import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
 import org.jraf.qontoapigraphqlbridge.graphql.model.pagination.Connection
 import org.jraf.qontoapigraphqlbridge.graphql.model.pagination.PageInfo
 import org.jraf.qontoapigraphqlbridge.qontoapi.QontoApi
@@ -57,4 +59,8 @@ fun <QontoType : Any, GraphqlType : Any> Page<QontoType>.toConnection(mapper: (Q
         ),
         totalCount = totalItems
     )
+}
+
+fun centsToMonetaryAmount(cents: Long, currency: Currency): MonetaryAmount {
+    return MonetaryAmount((cents.toDouble() / 100.0).toInt().toString(), currency)
 }
