@@ -34,6 +34,7 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.bankaccount.BANK_ACCO
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.label.LABELS_DATA_FETCHER
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.member.MEMBERS_DATA_FETCHER
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.ORGANIZATION_DATA_FETCHER
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.TRANSACTIONS_DATA_FETCHER
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -62,6 +63,7 @@ class QontoApiSchema {
                     .dataFetcher("labels", LABELS_DATA_FETCHER)
                     .dataFetcher("members", MEMBERS_DATA_FETCHER)
                     .dataFetcher("bankAccounts", BANK_ACCOUNTS_DATA_FETCHER)
+                    .dataFetcher("transactions", TRANSACTIONS_DATA_FETCHER)
             )
             .build()
     }

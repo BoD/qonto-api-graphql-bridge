@@ -23,9 +23,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql.model.money
+package org.jraf.qontoapigraphqlbridge.graphql.model.transaction
 
-enum class Currency {
-    EUR,
-    USD,
+enum class TransactionVatRate {
+    CUSTOM,
+    ZERO,
+    _2_1,
+    _5_5,
+    _10,
+    _20,
 }

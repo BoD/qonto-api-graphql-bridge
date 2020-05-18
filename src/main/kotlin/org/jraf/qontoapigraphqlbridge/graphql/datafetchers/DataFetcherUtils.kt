@@ -48,6 +48,7 @@ fun DataFetchingEnvironment.getItemsPerPage(): Int {
     return getArgument("itemsPerPage")
 }
 
+operator fun <T> DataFetchingEnvironment.get(name: String): T = getArgument(name)
 
 fun <QontoType : Any, GraphqlType : Any> Page<QontoType>.toConnection(mapper: (QontoType) -> GraphqlType): Connection<GraphqlType> {
     return Connection(

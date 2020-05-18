@@ -23,9 +23,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql.model.money
+package org.jraf.qontoapigraphqlbridge.graphql.model.transaction
 
-enum class Currency {
-    EUR,
-    USD,
+enum class TransactionStatus {
+    PENDING,
+    REVERSED,
+    DECLINED,
+    COMPLETED,
 }

@@ -25,7 +25,10 @@ enum Currency {
 The side of a transaction (either a debit or a credit).
 """
 enum TransactionSide {
+    "Outgoing transaction."
     DEBIT
+
+    "Incoming transaction."
     CREDIT
 }
 
@@ -34,11 +37,22 @@ enum TransactionSide {
 A transaction's type of operation.
 """
 enum TransactionOperationType {
+    "An outgoing transfer."
     TRANSFER
+
+    "A card payment."
     CARD
+
+    "A SEPA Direct Debit (collecting payments from other businesses)."
     DIRECT_DEBIT
+
+    "An incoming transfer."
     INCOME
+
+    "A Qonto fee (subscription, atm withdrawal, fx card...)."
     QONTO_FEE
+
+    "A Check cashed in on the account."
     CHEQUE
 }
 
@@ -199,12 +213,16 @@ Transactions contribute to the bank account's balances (e.g., incomes, transfers
 type Transaction {
     id: ID!
 
+    """
+    Amount of the transaction in the currency of the bank account (in our case, it will be
+    in euros as it is our only supported bank account currency).
+    """
     amount: MonetaryAmount!
 
-    attachments: [Attachment]!
-
-    "Amount in the local currency"
+    "Amount of the transaction in the foreign currency (if any)."
     localAmount: MonetaryAmount!
+
+    attachments: [Attachment]!
 
     "Side of the transaction (debit or credit)"
     side: TransactionSide!
@@ -233,7 +251,11 @@ type Transaction {
     "Message sent along `INCOME`, `TRANSFER` and `DIRECT_DEBIT` transactions"
     reference: String
 
-    "Amount of VAT filled in on the transaction (or null for no VAT)"
+    """
+    Amount of VAT filled in on the transaction (or null for no VAT).
+    **Do note:** If you're a user of VAT auto-detection feature, only confirmed VAT
+    information will appear in the response.
+    """
     vatAmount: MonetaryAmount
 
     "VAT rate (or null for no VAT)"
@@ -284,6 +306,21 @@ type MemberConnection {
 
 
 """
+A list of transactions.
+"""
+type TransactionConnection {
+    "A list of nodes."
+    nodes: [Transaction]!
+
+    "Information to aid in pagination."
+    pageInfo: PageInfo!
+
+    "Identifies the total count of items in the connection."
+    totalCount: Int!
+}
+
+
+"""
 Information about pagination in a connection.
 """
 type PageInfo {
@@ -295,6 +332,54 @@ type PageInfo {
 
     "Index of previous page, or null if this is the first page."
     previousPageIndex: Int
+}
+
+
+"""
+Possible directions in which to order a list of items when provided an `orderBy` argument.
+"""
+enum OrderDirection {
+    """
+    Specifies an ascending order for a given `orderBy` argument.
+    """
+    ASC
+
+    """
+    Specifies a descending order for a given `orderBy` argument.
+    """
+    DESC
+}
+
+
+"""
+Properties by which transaction connections can be ordered.
+"""
+enum TransactionOrderField {
+    """
+    Order transactions by updated date.
+    """
+    UPDATED_DATE
+
+    """
+    Order transactions by settled date.
+    """
+    SETTLED_DATE
+}
+
+
+"""
+Ways in which lists of transactions can be ordered upon return.
+"""
+input TransactionsOrder {
+    """
+    The direction in which to order labels by the specified field.
+    """
+    direction: OrderDirection!
+
+    """
+    The field in which to order labels by.
+    """
+    field: TransactionOrderField!
 }
 
 
@@ -336,4 +421,38 @@ type Query {
     List all bank accounts of the viewer's organization.
     """
     bankAccounts: [BankAccount]
+
+    """
+    List the transactions of a bank account.
+    """
+    transactions(
+        "The bank account to list the transactions of."
+        bankAccountId: ID!
+
+        "Only include transaction with these statuses."
+        statusFilter: [TransactionStatus]! = [COMPLETED]
+
+        "Only include transactions with an updated date later than this parameter."
+        updatedDateFrom: Timestamp
+
+        "Only include transactions with an updated date earlier than this paremeter."
+        updatedDateTo: Timestamp
+
+        "Only include transactions with a settled date later than this parameter."
+        settledFrom: Timestamp
+
+        "Only include transactions with a settled date earlier than this paremeter."
+        settledTo: Timestamp
+
+        "Index of the page to retrieve (starts at 1)."
+        pageIndex: Int!
+
+        "Number of items per page."
+        itemsPerPage: Int!
+
+        """
+        Ordering options for the returned transactions.
+        """
+        orderBy: TransactionsOrder = { field: UPDATED_DATE, direction: DESC}
+    ): TransactionConnection
 }
