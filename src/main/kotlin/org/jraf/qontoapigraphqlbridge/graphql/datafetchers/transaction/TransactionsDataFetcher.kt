@@ -70,7 +70,7 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
                 vatAmount = qontoTransaction.vatAmountCents?.let { centsToMonetaryAmount(it, Currency.valueOf(qontoTransaction.currency)) },
                 vatRate = TransactionVatRate.CUSTOM, // TODO
                 initiatorId = qontoTransaction.initiatorId,
-                labels = listOf(), // TODO
+                labelIds = qontoTransaction.labelIds,
                 isAttachmentLost = qontoTransaction.attachmentLost,
                 isAttachmentRequired = qontoTransaction.attachmentRequired
             )

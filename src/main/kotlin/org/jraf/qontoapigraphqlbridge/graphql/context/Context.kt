@@ -27,11 +27,14 @@ package org.jraf.qontoapigraphqlbridge.graphql.context
 
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
+import org.jraf.qontoapigraphqlbridge.graphql.model.label.Label
 import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
 
 
 data class Context(
     val authenticationInformation: AuthenticationInformation,
     var qontoClient: QontoClient? = null,
-    var allMembers: Map<String, Member>? = null
+    var allMembers: Map<String, Member>? = null,
+    var allLabels: Map<String, Label>? = null
+
 )

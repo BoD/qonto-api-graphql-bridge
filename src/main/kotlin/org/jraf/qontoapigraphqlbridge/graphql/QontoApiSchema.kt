@@ -46,6 +46,8 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETC
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_INITIATOR
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_INITIATOR_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_LABELS
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_LABELS_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.scalar.SCALAR_TIMESTAMP_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.scalar.SCALAR_URL_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.scalar.createTimestampScalar
@@ -97,6 +99,7 @@ class QontoApiSchema {
             .type(
                 newTypeWiring(TYPE_NAME_TRANSACTION)
                     .dataFetcher(DATA_FETCHER_TRANSACTION_INITIATOR_NAME, DATA_FETCHER_TRANSACTION_INITIATOR)
+                    .dataFetcher(DATA_FETCHER_TRANSACTION_LABELS_NAME, DATA_FETCHER_TRANSACTION_LABELS)
             )
             .build()
     }

@@ -41,11 +41,15 @@ val DATA_FETCHER_LABELS = DataFetcher { env ->
     val itemsPerPage = env.getItemsPerPage()
     runBlocking {
         env.qontoClient.labels.getLabelList(Pagination(pageIndex, itemsPerPage)).toConnection { qontoLabel ->
-            Label(
-                id = qontoLabel.id,
-                name = qontoLabel.name,
-                parentLabelId = qontoLabel.parentId
-            )
+            qontoLabelToLabel(qontoLabel)
         }
     }
+}
+
+fun qontoLabelToLabel(qontoLabel: org.jraf.klibqonto.model.labels.Label): Label {
+    return Label(
+        id = qontoLabel.id,
+        name = qontoLabel.name,
+        parentLabelId = qontoLabel.parentId
+    )
 }
