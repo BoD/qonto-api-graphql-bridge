@@ -84,7 +84,7 @@ fun main() {
                     Hello, World!<br>
                     This bridge allows you to access the <a href="https://api-doc.qonto.eu/2.0/welcome/">Qonto API</a> using GraphQL.<br>
                     <br>
-                    The GraphQL endpoint is accessible <a href="graphql">here</a><br>.
+                    The GraphQL endpoint is accessible <a href="graphql">here</a>.<br>
                     <br>
                     More information: <a href="https://github.com/BoD/qonto-api-graphql-bridge">project on Github</a> - Author: <a href="mailto:BoD@JRAF.org">BoD@JRAF.org</a>
                     </body></html>
