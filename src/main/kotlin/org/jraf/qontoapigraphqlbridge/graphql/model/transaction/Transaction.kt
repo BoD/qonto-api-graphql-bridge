@@ -27,7 +27,6 @@ package org.jraf.qontoapigraphqlbridge.graphql.model.transaction
 
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.qontoapigraphqlbridge.graphql.model.label.Label
-import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
 import java.util.Date
 
@@ -47,7 +46,7 @@ data class Transaction(
     val reference: String?,
     val vatAmount: MonetaryAmount?,
     val vatRate: TransactionVatRate?,
-    val initiator: Member?,
+    val initiatorId: String?,
     val labels: List<Label>,
     val isAttachmentLost: Boolean,
     val isAttachmentRequired: Boolean

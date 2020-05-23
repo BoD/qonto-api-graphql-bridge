@@ -28,16 +28,15 @@ package org.jraf.qontoapigraphqlbridge.graphql.datafetchers.bankaccount
 import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.centsToMonetaryAmount
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.model.bankaccount.BankAccount
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 
 const val DATA_FETCHER_BANK_ACCOUNTS_NAME = "bankAccounts"
 
 val DATA_FETCHER_BANK_ACCOUNTS = DataFetcher { env ->
-    val qontoClient = env.getQontoClient()
     runBlocking {
-        qontoClient.organizations.getOrganization().bankAccounts.map { qontoBankAccount ->
+        env.qontoClient.organizations.getOrganization().bankAccounts.map { qontoBankAccount ->
             BankAccount(
                 id = qontoBankAccount.slug,
                 iban = qontoBankAccount.iban,

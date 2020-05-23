@@ -23,17 +23,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization
+package org.jraf.qontoapigraphqlbridge.graphql.context
 
-import graphql.schema.DataFetcher
-import kotlinx.coroutines.runBlocking
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
-import org.jraf.qontoapigraphqlbridge.graphql.model.organization.Organization
+import org.jraf.klibqonto.client.QontoClient
+import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
+import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
 
-const val DATA_FETCHER_ORGANIZATION_NAME = "organization"
 
-val DATA_FETCHER_ORGANIZATION = DataFetcher { env ->
-    runBlocking {
-        Organization(id = env.qontoClient.organizations.getOrganization().slug)
-    }
-}
+data class Context(
+    val authenticationInformation: AuthenticationInformation,
+    var qontoClient: QontoClient? = null,
+    var allMembers: Map<String, Member>? = null
+)

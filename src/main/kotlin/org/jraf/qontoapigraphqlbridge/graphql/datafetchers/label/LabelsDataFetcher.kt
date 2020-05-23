@@ -30,18 +30,17 @@ import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getItemsPerPage
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getPageIndex
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.label.Label
 
 const val DATA_FETCHER_LABELS_NAME = "labels"
 
 val DATA_FETCHER_LABELS = DataFetcher { env ->
-    val qontoClient = env.getQontoClient()
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()
     runBlocking {
-        qontoClient.labels.getLabelList(Pagination(pageIndex, itemsPerPage)).toConnection { qontoLabel ->
+        env.qontoClient.labels.getLabelList(Pagination(pageIndex, itemsPerPage)).toConnection { qontoLabel ->
             Label(
                 id = qontoLabel.id,
                 name = qontoLabel.name,

@@ -27,26 +27,30 @@ package org.jraf.qontoapigraphqlbridge.graphql.datafetchers.member
 
 import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
+import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getItemsPerPage
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getPageIndex
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
 
 const val DATA_FETCHER_MEMBERS_NAME = "members"
 
 val DATA_FETCHER_MEMBERS = DataFetcher { env ->
-    val qontoClient = env.getQontoClient()
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()
     runBlocking {
-        qontoClient.memberships.getMembershipList(Pagination(pageIndex, itemsPerPage)).toConnection { qontoMembership ->
-            Member(
-                id = qontoMembership.id,
-                firstName = qontoMembership.firstName,
-                lastName = qontoMembership.lastName
-            )
+        env.qontoClient.memberships.getMembershipList(Pagination(pageIndex, itemsPerPage)).toConnection { qontoMembership ->
+            qontoMembershipToMember(qontoMembership)
         }
     }
+}
+
+fun qontoMembershipToMember(qontoMembership: Membership): Member {
+    return Member(
+        id = qontoMembership.id,
+        firstName = qontoMembership.firstName,
+        lastName = qontoMembership.lastName
+    )
 }

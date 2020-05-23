@@ -28,17 +28,22 @@ package org.jraf.qontoapigraphqlbridge.graphql.datafetchers
 import graphql.schema.DataFetchingEnvironment
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.pagination.Page
-import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
+import org.jraf.qontoapigraphqlbridge.graphql.context.Context
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
 import org.jraf.qontoapigraphqlbridge.graphql.model.pagination.Connection
 import org.jraf.qontoapigraphqlbridge.graphql.model.pagination.PageInfo
 import org.jraf.qontoapigraphqlbridge.qontoapi.QontoApi
 
-fun DataFetchingEnvironment.getQontoClient(): QontoClient {
-    val authenticationInformation = getContext<AuthenticationInformation>()
-    return QontoApi(authenticationInformation).qontoClient
-}
+val DataFetchingEnvironment.qontoClient: QontoClient
+    get() {
+        val context = getContext<Context>()
+        if (context.qontoClient == null) {
+            val authenticationInformation = getContext<Context>().authenticationInformation
+            context.qontoClient = QontoApi(authenticationInformation).qontoClient
+        }
+        return context.qontoClient!!
+    }
 
 fun DataFetchingEnvironment.getPageIndex(): Int {
     return getArgument("pageIndex")

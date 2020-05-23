@@ -32,7 +32,7 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.centsToMonetaryAmount
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.get
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getItemsPerPage
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getPageIndex
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.Transaction
@@ -44,7 +44,7 @@ import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionVatRa
 const val DATA_FETCHER_TRANSACTIONS_NAME = "transactions"
 
 val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
-    val qontoClient = env.getQontoClient()
+    val qontoClient = env.qontoClient
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()
     val bankAccountId: String = env["bankAccountId"]
@@ -69,7 +69,7 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
                 reference = qontoTransaction.reference,
                 vatAmount = qontoTransaction.vatAmountCents?.let { centsToMonetaryAmount(it, Currency.valueOf(qontoTransaction.currency)) },
                 vatRate = TransactionVatRate.CUSTOM, // TODO
-                initiator = null, // TODO
+                initiatorId = qontoTransaction.initiatorId,
                 labels = listOf(), // TODO
                 isAttachmentLost = qontoTransaction.attachmentLost,
                 isAttachmentRequired = qontoTransaction.attachmentRequired

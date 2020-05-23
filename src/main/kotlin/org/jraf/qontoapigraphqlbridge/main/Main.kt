@@ -48,6 +48,7 @@ import org.jraf.qontoapigraphqlbridge.auth.AUTH_KEY
 import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
 import org.jraf.qontoapigraphqlbridge.auth.getAuthenticationInformation
 import org.jraf.qontoapigraphqlbridge.graphql.QontoApiSchema
+import org.jraf.qontoapigraphqlbridge.graphql.context.Context
 
 private const val DEFAULT_PORT = 8042
 private const val ENV_PORT = "PORT"
@@ -94,7 +95,7 @@ fun main() {
             graphQL("/graphql", schema) {
                 config {
                     graphiql = true
-                    context = call.getAuthenticationInformation()
+                    context = Context(call.getAuthenticationInformation())
                 }
             }.apply {
                 // Handle authentication

@@ -44,6 +44,8 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.DATA_FET
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.DATA_FETCHER_ORGANIZATION_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_INITIATOR
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_INITIATOR_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.scalar.SCALAR_TIMESTAMP_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.scalar.SCALAR_URL_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.scalar.createTimestampScalar
@@ -52,7 +54,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 private const val SCHEMA_RESOURCE = "/schema.graphqls"
+
 private const val TYPE_NAME_QUERY = "Query"
+private const val TYPE_NAME_TRANSACTION = "Transaction"
 
 class QontoApiSchema {
     val schema = buildSchema()
@@ -89,6 +93,10 @@ class QontoApiSchema {
                     .dataFetcher(DATA_FETCHER_MEMBERS_NAME, DATA_FETCHER_MEMBERS)
                     .dataFetcher(DATA_FETCHER_BANK_ACCOUNTS_NAME, DATA_FETCHER_BANK_ACCOUNTS)
                     .dataFetcher(DATA_FETCHER_TRANSACTIONS_NAME, DATA_FETCHER_TRANSACTIONS)
+            )
+            .type(
+                newTypeWiring(TYPE_NAME_TRANSACTION)
+                    .dataFetcher(DATA_FETCHER_TRANSACTION_INITIATOR_NAME, DATA_FETCHER_TRANSACTION_INITIATOR)
             )
             .build()
     }
