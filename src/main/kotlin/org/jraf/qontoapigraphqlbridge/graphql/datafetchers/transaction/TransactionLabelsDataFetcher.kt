@@ -37,7 +37,7 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.model.label.Label
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.Transaction
 
-typealias QontoLabel = org.jraf.klibqonto.model.labels.Label
+private typealias QontoLabel = org.jraf.klibqonto.model.labels.Label
 
 const val DATA_FETCHER_TRANSACTION_LABELS_NAME = "labels"
 

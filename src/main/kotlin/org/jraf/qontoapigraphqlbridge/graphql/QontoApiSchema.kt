@@ -44,6 +44,8 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.DATA_FET
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.DATA_FETCHER_ORGANIZATION_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_ATTACHMENTS
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_ATTACHMENTS_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_INITIATOR
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_INITIATOR_NAME
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTION_LABELS
@@ -100,6 +102,7 @@ class QontoApiSchema {
                 newTypeWiring(TYPE_NAME_TRANSACTION)
                     .dataFetcher(DATA_FETCHER_TRANSACTION_INITIATOR_NAME, DATA_FETCHER_TRANSACTION_INITIATOR)
                     .dataFetcher(DATA_FETCHER_TRANSACTION_LABELS_NAME, DATA_FETCHER_TRANSACTION_LABELS)
+                    .dataFetcher(DATA_FETCHER_TRANSACTION_ATTACHMENTS_NAME, DATA_FETCHER_TRANSACTION_ATTACHMENTS)
             )
             .build()
     }

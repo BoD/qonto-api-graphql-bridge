@@ -23,29 +23,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql.model.transaction
+package org.jraf.qontoapigraphqlbridge.graphql.model.attachment
 
-import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
 import java.util.Date
 
-data class Transaction(
+data class Attachment(
     val id: String,
-    val amount: MonetaryAmount,
-    val localAmount: MonetaryAmount,
-    val attachmentIds: List<String>,
-    val side: TransactionSide,
-    val operationType: TransactionOperationType,
-    val counterparty: String,
-    val settledDate: Date?,
-    val emittedDate: Date,
-    val updatedDate: Date,
-    val status: TransactionStatus,
-    val note: String?,
-    val reference: String?,
-    val vatAmount: MonetaryAmount?,
-    val vatRate: TransactionVatRate?,
-    val initiatorId: String?,
-    val labelIds: List<String>,
-    val isAttachmentLost: Boolean,
-    val isAttachmentRequired: Boolean
+    val creationDate: Date,
+    val fileName: String,
+    val size: Long,
+    val contentType: String,
+    val url: String
 )

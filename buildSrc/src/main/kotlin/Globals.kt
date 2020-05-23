@@ -5,5 +5,5 @@ object Versions {
     const val KTOR_GRAPHQL = "1.0.0"
     const val LOGBACK = "1.2.3"
     const val BEN_MANES_VERSIONS_PLUGIN = "0.28.0"
-    const val KLIBQONTO = "2.0.1"
+    const val KLIBQONTO = "2.1.0"
 }
