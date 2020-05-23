@@ -27,9 +27,6 @@ package org.jraf.qontoapigraphqlbridge.qontoapi
 
 import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
-import org.jraf.klibqonto.client.HttpConfiguration
-import org.jraf.klibqonto.client.HttpLoggingLevel
-import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
 
@@ -41,10 +38,10 @@ class QontoApi(authenticationInformation: AuthenticationInformation) {
                 authenticationInformation.secretKey
             )
             // Uncomment this to use a proxy
-            , HttpConfiguration(
-                loggingLevel = HttpLoggingLevel.INFO,
-                httpProxy = HttpProxy("localhost", 8888)
-            )
+//            , HttpConfiguration(
+//                loggingLevel = HttpLoggingLevel.INFO,
+//                httpProxy = HttpProxy("localhost", 8888)
+//            )
         )
     )
 }
