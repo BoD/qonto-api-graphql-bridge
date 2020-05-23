@@ -34,7 +34,9 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.label.Label
 
-val LABELS_DATA_FETCHER = DataFetcher { env ->
+const val DATA_FETCHER_LABELS_NAME = "labels"
+
+val DATA_FETCHER_LABELS = DataFetcher { env ->
     val qontoClient = env.getQontoClient()
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()

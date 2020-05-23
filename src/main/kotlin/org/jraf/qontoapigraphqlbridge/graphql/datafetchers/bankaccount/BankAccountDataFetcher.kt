@@ -32,7 +32,9 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.model.bankaccount.BankAccount
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 
-val BANK_ACCOUNTS_DATA_FETCHER = DataFetcher { env ->
+const val DATA_FETCHER_BANK_ACCOUNTS_NAME = "bankAccounts"
+
+val DATA_FETCHER_BANK_ACCOUNTS = DataFetcher { env ->
     val qontoClient = env.getQontoClient()
     runBlocking {
         qontoClient.organizations.getOrganization().bankAccounts.map { qontoBankAccount ->

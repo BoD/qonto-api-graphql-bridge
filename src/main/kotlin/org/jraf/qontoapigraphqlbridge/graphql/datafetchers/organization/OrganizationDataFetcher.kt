@@ -30,7 +30,9 @@ import kotlinx.coroutines.runBlocking
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.model.organization.Organization
 
-val ORGANIZATION_DATA_FETCHER = DataFetcher { env ->
+const val DATA_FETCHER_ORGANIZATION_NAME = "organization"
+
+val DATA_FETCHER_ORGANIZATION = DataFetcher { env ->
     val qontoClient = env.getQontoClient()
     runBlocking {
         Organization(id = qontoClient.organizations.getOrganization().slug)

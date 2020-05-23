@@ -23,8 +23,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql
+package org.jraf.qontoapigraphqlbridge.graphql.scalar
 
+import graphql.language.ScalarTypeDefinition
 import graphql.schema.Coercing
 import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLScalarType.newScalar
@@ -32,8 +33,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
 
-val TIMESTAMP_SCALAR: GraphQLScalarType = newScalar()
-    .name("Timestamp")
+const val SCALAR_TIMESTAMP_NAME = "Timestamp"
+
+fun createTimestampScalar(scalarTypeDefinition: ScalarTypeDefinition): GraphQLScalarType = newScalar()
+    .name(SCALAR_TIMESTAMP_NAME)
+    .description(scalarTypeDefinition.description.getContent())
     .coercing(TimestampScalarCoercing)
     .build()
 

@@ -41,7 +41,9 @@ import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionSide
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionStatus
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionVatRate
 
-val TRANSACTIONS_DATA_FETCHER = DataFetcher { env ->
+const val DATA_FETCHER_TRANSACTIONS_NAME = "transactions"
+
+val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
     val qontoClient = env.getQontoClient()
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()

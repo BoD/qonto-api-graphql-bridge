@@ -25,20 +25,34 @@
 
 package org.jraf.qontoapigraphqlbridge.graphql
 
+import graphql.AssertException
+import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.RuntimeWiring
+import graphql.schema.idl.ScalarWiringEnvironment
 import graphql.schema.idl.SchemaGenerator
 import graphql.schema.idl.SchemaParser
 import graphql.schema.idl.TypeRuntimeWiring.newTypeWiring
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.bankaccount.BANK_ACCOUNTS_DATA_FETCHER
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.label.LABELS_DATA_FETCHER
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.member.MEMBERS_DATA_FETCHER
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.ORGANIZATION_DATA_FETCHER
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.TRANSACTIONS_DATA_FETCHER
+import graphql.schema.idl.WiringFactory
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.bankaccount.DATA_FETCHER_BANK_ACCOUNTS
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.bankaccount.DATA_FETCHER_BANK_ACCOUNTS_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.label.DATA_FETCHER_LABELS
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.label.DATA_FETCHER_LABELS_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.member.DATA_FETCHER_MEMBERS
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.member.DATA_FETCHER_MEMBERS_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.DATA_FETCHER_ORGANIZATION
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.organization.DATA_FETCHER_ORGANIZATION_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction.DATA_FETCHER_TRANSACTIONS_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.scalar.SCALAR_TIMESTAMP_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.scalar.SCALAR_URL_NAME
+import org.jraf.qontoapigraphqlbridge.graphql.scalar.createTimestampScalar
+import org.jraf.qontoapigraphqlbridge.graphql.scalar.createUrlScalar
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 private const val SCHEMA_RESOURCE = "/schema.graphqls"
+private const val TYPE_NAME_QUERY = "Query"
 
 class QontoApiSchema {
     val schema = buildSchema()
@@ -55,15 +69,26 @@ class QontoApiSchema {
 
     private fun buildRuntimeWiring(): RuntimeWiring {
         return RuntimeWiring.newRuntimeWiring()
-            .scalar(TIMESTAMP_SCALAR)
-            .scalar(URL_SCALAR)
+            .wiringFactory(object : WiringFactory {
+                override fun providesScalar(environment: ScalarWiringEnvironment): Boolean {
+                    return environment.scalarTypeDefinition.name in setOf(SCALAR_TIMESTAMP_NAME, SCALAR_URL_NAME)
+                }
+
+                override fun getScalar(environment: ScalarWiringEnvironment): GraphQLScalarType {
+                    return when (environment.scalarTypeDefinition.name) {
+                        SCALAR_TIMESTAMP_NAME -> createTimestampScalar(environment.scalarTypeDefinition)
+                        SCALAR_URL_NAME -> createUrlScalar(environment.scalarTypeDefinition)
+                        else -> throw AssertException("Internal error: should never happen")
+                    }
+                }
+            })
             .type(
-                newTypeWiring("Query")
-                    .dataFetcher("organization", ORGANIZATION_DATA_FETCHER)
-                    .dataFetcher("labels", LABELS_DATA_FETCHER)
-                    .dataFetcher("members", MEMBERS_DATA_FETCHER)
-                    .dataFetcher("bankAccounts", BANK_ACCOUNTS_DATA_FETCHER)
-                    .dataFetcher("transactions", TRANSACTIONS_DATA_FETCHER)
+                newTypeWiring(TYPE_NAME_QUERY)
+                    .dataFetcher(DATA_FETCHER_ORGANIZATION_NAME, DATA_FETCHER_ORGANIZATION)
+                    .dataFetcher(DATA_FETCHER_LABELS_NAME, DATA_FETCHER_LABELS)
+                    .dataFetcher(DATA_FETCHER_MEMBERS_NAME, DATA_FETCHER_MEMBERS)
+                    .dataFetcher(DATA_FETCHER_BANK_ACCOUNTS_NAME, DATA_FETCHER_BANK_ACCOUNTS)
+                    .dataFetcher(DATA_FETCHER_TRANSACTIONS_NAME, DATA_FETCHER_TRANSACTIONS)
             )
             .build()
     }

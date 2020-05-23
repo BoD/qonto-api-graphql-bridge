@@ -23,14 +23,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql
+package org.jraf.qontoapigraphqlbridge.graphql.scalar
 
 import graphql.Scalars.GraphQLString
+import graphql.language.ScalarTypeDefinition
 import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLScalarType.newScalar
 
-val URL_SCALAR: GraphQLScalarType = newScalar(GraphQLString)
-    .name("URL")
+const val SCALAR_URL_NAME = "URL"
+
+fun createUrlScalar(scalarTypeDefinition: ScalarTypeDefinition): GraphQLScalarType = newScalar(GraphQLString)
+    .name(SCALAR_URL_NAME)
+    .description(scalarTypeDefinition.description.getContent())
     .build()
 
 //object UrlScalarCoercing : Coercing<Date?, String?> {

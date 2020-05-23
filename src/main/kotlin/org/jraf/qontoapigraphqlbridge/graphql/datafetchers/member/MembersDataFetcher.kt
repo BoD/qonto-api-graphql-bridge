@@ -34,7 +34,9 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getQontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
 
-val MEMBERS_DATA_FETCHER = DataFetcher { env ->
+const val DATA_FETCHER_MEMBERS_NAME = "members"
+
+val DATA_FETCHER_MEMBERS = DataFetcher { env ->
     val qontoClient = env.getQontoClient()
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()
