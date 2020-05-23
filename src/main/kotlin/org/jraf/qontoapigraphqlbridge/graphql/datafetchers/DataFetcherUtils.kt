@@ -25,15 +25,20 @@
 
 package org.jraf.qontoapigraphqlbridge.graphql.datafetchers
 
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.schema.DataFetchingEnvironment
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.qontoapigraphqlbridge.graphql.context.Context
+import org.jraf.qontoapigraphqlbridge.graphql.model.lists.pagination.Connection
+import org.jraf.qontoapigraphqlbridge.graphql.model.lists.pagination.PageInfo
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
-import org.jraf.qontoapigraphqlbridge.graphql.model.pagination.Connection
-import org.jraf.qontoapigraphqlbridge.graphql.model.pagination.PageInfo
 import org.jraf.qontoapigraphqlbridge.qontoapi.QontoApi
+
+@Suppress("ObjectPropertyName")
+val _JACKSON_OBJECT_MAPPER = jacksonObjectMapper()
 
 val DataFetchingEnvironment.qontoClient: QontoClient
     get() {
@@ -45,15 +50,17 @@ val DataFetchingEnvironment.qontoClient: QontoClient
         return context.qontoClient!!
     }
 
-fun DataFetchingEnvironment.getPageIndex(): Int {
-    return getArgument("pageIndex")
-}
+val DataFetchingEnvironment.pageIndex: Int
+    get() {
+        return getArgument("pageIndex")
+    }
 
-fun DataFetchingEnvironment.getItemsPerPage(): Int {
-    return getArgument("itemsPerPage")
-}
+val DataFetchingEnvironment.itemsPerPage: Int
+    get() {
+        return getArgument("itemsPerPage")
+    }
 
-operator fun <T> DataFetchingEnvironment.get(name: String): T = getArgument(name)
+inline operator fun <reified T> DataFetchingEnvironment.get(name: String): T = _JACKSON_OBJECT_MAPPER.convertValue(getArgument(name))
 
 fun <QontoType : Any, GraphqlType : Any> Page<QontoType>.toConnection(mapper: (QontoType) -> GraphqlType): Connection<GraphqlType> {
     return Connection(

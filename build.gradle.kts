@@ -77,4 +77,7 @@ dependencies {
 
     // klibqonto
     implementation("org.jraf:klibqonto:${Versions.KLIBQONTO}")
+
+    // Jackson
+    implementation(("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.JACKSON_KOTLIN}"))
 }

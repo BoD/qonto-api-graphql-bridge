@@ -27,35 +27,45 @@ package org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction
 
 import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
+import org.jraf.klibqonto.client.QontoClient.Transactions.SortField
+import org.jraf.klibqonto.client.QontoClient.Transactions.SortOrder
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction.Status
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.centsToMonetaryAmount
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.get
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getItemsPerPage
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getPageIndex
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.itemsPerPage
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.pageIndex
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
+import org.jraf.qontoapigraphqlbridge.graphql.model.lists.OrderDirection
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.Transaction
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionOperationType
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionSide
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionStatus
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionVatRate
+import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionsOrder
 
 const val DATA_FETCHER_TRANSACTIONS_NAME = "transactions"
 
 val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
     val qontoClient = env.qontoClient
-    val pageIndex = env.getPageIndex()
-    val itemsPerPage = env.getItemsPerPage()
-    val statusFilter = env.getArgument<List<String>>("statusFilter")
+    val pageIndex = env.pageIndex
+    val itemsPerPage = env.itemsPerPage
     val bankAccountId: String = env["bankAccountId"]
+    val statusFilter: List<String> = env["statusFilter"]
+    val orderBy: TransactionsOrder = env["orderBy"]
     runBlocking {
         try {
             qontoClient.transactions.getTransactionList(
                 bankAccountSlug = bankAccountId,
                 pagination = Pagination(pageIndex, itemsPerPage),
-                status = statusFilter.map { Status.valueOf(it) }.toSet()
+                status = statusFilter.map { Status.valueOf(it) }.toSet(),
+                sortField = SortField.valueOf(orderBy.field.name),
+                sortOrder = when (orderBy.direction) {
+                    OrderDirection.ASC -> SortOrder.ASCENDING
+                    OrderDirection.DESC -> SortOrder.DESCENDING
+                }
             ).toConnection { qontoTransaction ->
                 Transaction(
                     id = qontoTransaction.id,

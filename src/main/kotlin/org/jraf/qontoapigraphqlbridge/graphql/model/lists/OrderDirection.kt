@@ -23,10 +23,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql.model.pagination
+package org.jraf.qontoapigraphqlbridge.graphql.model.lists
 
-data class PageInfo(
-    val pageIndex: Int,
-    val nextPageIndex: Int?,
-    val previousPageIndex: Int?
-)
+enum class OrderDirection {
+    ASC,
+    DESC,
+}

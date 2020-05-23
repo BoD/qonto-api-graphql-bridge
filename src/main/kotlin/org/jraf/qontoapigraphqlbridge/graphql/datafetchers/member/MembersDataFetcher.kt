@@ -29,8 +29,8 @@ import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.pagination.Pagination
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getItemsPerPage
-import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getPageIndex
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.itemsPerPage
+import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.pageIndex
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
@@ -38,8 +38,8 @@ import org.jraf.qontoapigraphqlbridge.graphql.model.member.Member
 const val DATA_FETCHER_MEMBERS_NAME = "members"
 
 val DATA_FETCHER_MEMBERS = DataFetcher { env ->
-    val pageIndex = env.getPageIndex()
-    val itemsPerPage = env.getItemsPerPage()
+    val pageIndex = env.pageIndex
+    val itemsPerPage = env.itemsPerPage
     runBlocking {
         env.qontoClient.memberships.getMembershipList(Pagination(pageIndex, itemsPerPage)).toConnection { qontoMembership ->
             qontoMembershipToMember(qontoMembership)

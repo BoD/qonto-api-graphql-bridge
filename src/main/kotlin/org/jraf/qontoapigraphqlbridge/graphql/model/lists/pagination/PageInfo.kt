@@ -23,10 +23,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.qontoapigraphqlbridge.graphql.model.pagination
+package org.jraf.qontoapigraphqlbridge.graphql.model.lists.pagination
 
-data class Connection<T>(
-    val nodes: List<T>,
-    val pageInfo: PageInfo,
-    val totalCount: Int
+data class PageInfo(
+    val pageIndex: Int,
+    val nextPageIndex: Int?,
+    val previousPageIndex: Int?
 )

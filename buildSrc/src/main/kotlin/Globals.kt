@@ -6,4 +6,5 @@ object Versions {
     const val LOGBACK = "1.2.3"
     const val BEN_MANES_VERSIONS_PLUGIN = "0.28.0"
     const val KLIBQONTO = "2.1.0"
+    const val JACKSON_KOTLIN = "2.11.0"
 }
