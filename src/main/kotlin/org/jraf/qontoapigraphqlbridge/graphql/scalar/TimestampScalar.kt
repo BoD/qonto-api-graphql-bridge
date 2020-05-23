@@ -26,7 +26,9 @@
 package org.jraf.qontoapigraphqlbridge.graphql.scalar
 
 import graphql.language.ScalarTypeDefinition
+import graphql.language.StringValue
 import graphql.schema.Coercing
+import graphql.schema.CoercingParseLiteralException
 import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLScalarType.newScalar
 import java.text.SimpleDateFormat
@@ -47,7 +49,12 @@ object TimestampScalarCoercing : Coercing<Date?, String?> {
     }
 
     override fun parseLiteral(input: Any?): Date? {
-        throw UnsupportedOperationException()
+        val value = (input as StringValue).value
+        return try {
+            DATE_SERIALIZED_FORMAT.parse(value)
+        } catch (e: Exception) {
+            throw CoercingParseLiteralException("Input '$value' cannot be coerced into a Timestamp", e, input.sourceLocation)
+        }
     }
 
     override fun serialize(dataFetcherResult: Any?): String? {

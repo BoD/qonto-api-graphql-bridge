@@ -60,7 +60,12 @@ val DataFetchingEnvironment.itemsPerPage: Int
         return getArgument("itemsPerPage")
     }
 
-inline operator fun <reified T> DataFetchingEnvironment.get(name: String): T = _JACKSON_OBJECT_MAPPER.convertValue(getArgument(name))
+inline operator fun <reified T> DataFetchingEnvironment.get(name: String): T {
+    if (getArgument<T>(name) == null) {
+        return null as T
+    }
+    return _JACKSON_OBJECT_MAPPER.convertValue(getArgument(name))
+}
 
 fun <QontoType : Any, GraphqlType : Any> Page<QontoType>.toConnection(mapper: (QontoType) -> GraphqlType): Connection<GraphqlType> {
     return Connection(

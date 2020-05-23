@@ -29,6 +29,7 @@ import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.client.QontoClient.Transactions.SortField
 import org.jraf.klibqonto.client.QontoClient.Transactions.SortOrder
+import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction.Status
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.centsToMonetaryAmount
@@ -45,6 +46,7 @@ import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionSide
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionStatus
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionVatRate
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionsOrder
+import java.util.Date
 
 const val DATA_FETCHER_TRANSACTIONS_NAME = "transactions"
 
@@ -55,6 +57,10 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
     val bankAccountId: String = env["bankAccountId"]
     val statusFilter: List<String> = env["statusFilter"]
     val orderBy: TransactionsOrder = env["orderBy"]
+    val updatedDateFrom: Date? = env["updatedDateFrom"]
+    val updatedDateTo: Date? = env["updatedDateTo"]
+    val settledDateFrom: Date? = env["settledDateFrom"]
+    val settledDateTo: Date? = env["settledDateTo"]
     runBlocking {
         try {
             qontoClient.transactions.getTransactionList(
@@ -65,7 +71,9 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
                 sortOrder = when (orderBy.direction) {
                     OrderDirection.ASC -> SortOrder.ASCENDING
                     OrderDirection.DESC -> SortOrder.DESCENDING
-                }
+                },
+                updatedDateRange = DateRange(from = updatedDateFrom, to = updatedDateTo),
+                settledDateRange = DateRange(from = settledDateFrom, to = settledDateTo)
             ).toConnection { qontoTransaction ->
                 Transaction(
                     id = qontoTransaction.id,
@@ -99,5 +107,3 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
         }
     }
 }
-
-
