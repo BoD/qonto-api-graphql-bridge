@@ -74,22 +74,22 @@ Possible VAT rates.
 """
 enum TransactionVatRate {
     "A custom rate"
-    CUSTOM
+    RATE_CUSTOM
 
     "0%"
-    ZERO
+    RATE_ZERO
 
     "2.1%"
-    _2_1
+    RATE_2_1
 
     "5.5%"
-    _5_5
+    RATE_5_5
 
     "10%"
-    _10
+    RATE_10
 
     "20%"
-    _20
+    RATE_20
 }
 
 

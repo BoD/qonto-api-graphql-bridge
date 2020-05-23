@@ -68,5 +68,5 @@ fun <QontoType : Any, GraphqlType : Any> Page<QontoType>.toConnection(mapper: (Q
 }
 
 fun centsToMonetaryAmount(cents: Long, currency: Currency): MonetaryAmount {
-    return MonetaryAmount((cents.toDouble() / 100.0).toInt().toString(), currency)
+    return MonetaryAmount((cents.toDouble() / 100.0).toString(), currency)
 }

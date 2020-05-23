@@ -26,10 +26,25 @@
 package org.jraf.qontoapigraphqlbridge.graphql.model.transaction
 
 enum class TransactionVatRate {
-    CUSTOM,
-    ZERO,
-    _2_1,
-    _5_5,
-    _10,
-    _20,
+    RATE_CUSTOM,
+    RATE_ZERO,
+    RATE_2_1,
+    RATE_5_5,
+    RATE_10,
+    RATE_20,
+    ;
+
+    companion object {
+        fun fromFloat(floatValue: Float?): TransactionVatRate? {
+            return when (floatValue) {
+                null -> null
+                0F -> RATE_ZERO
+                2.1F -> RATE_2_1
+                5.5F -> RATE_5_5
+                10F -> RATE_10
+                20F -> RATE_20
+                else -> RATE_CUSTOM
+            }
+        }
+    }
 }
