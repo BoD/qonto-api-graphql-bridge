@@ -17,9 +17,11 @@ A system of money in general use in a particular country or region.
 
 See [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217).
 """
+# TODO Get a complete list of all possible currencies (https://en.wikipedia.org/wiki/ISO_4217)
 enum Currency {
     EUR
     USD
+    CHF
 }
 
 """

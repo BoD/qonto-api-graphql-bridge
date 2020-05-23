@@ -26,6 +26,8 @@
 package org.jraf.qontoapigraphqlbridge.graphql.model.money
 
 enum class Currency {
+    // TODO Get a complete list of all possible currencies (https://en.wikipedia.org/wiki/ISO_4217)
     EUR,
     USD,
+    CHF
 }

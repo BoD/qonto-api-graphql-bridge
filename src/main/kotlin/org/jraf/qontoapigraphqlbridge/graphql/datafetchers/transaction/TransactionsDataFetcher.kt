@@ -28,6 +28,7 @@ package org.jraf.qontoapigraphqlbridge.graphql.datafetchers.transaction
 import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.model.pagination.Pagination
+import org.jraf.klibqonto.model.transactions.Transaction.Status
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.centsToMonetaryAmount
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.get
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.getItemsPerPage
@@ -47,33 +48,44 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
     val qontoClient = env.qontoClient
     val pageIndex = env.getPageIndex()
     val itemsPerPage = env.getItemsPerPage()
+    val statusFilter = env.getArgument<List<String>>("statusFilter")
     val bankAccountId: String = env["bankAccountId"]
     runBlocking {
-        qontoClient.transactions.getTransactionList(
-            bankAccountSlug = bankAccountId,
-            pagination = Pagination(pageIndex, itemsPerPage)
-        ).toConnection { qontoTransaction ->
-            Transaction(
-                id = qontoTransaction.id,
-                amount = centsToMonetaryAmount(qontoTransaction.amountCents, Currency.valueOf(qontoTransaction.currency)),
-                localAmount = centsToMonetaryAmount(qontoTransaction.localAmountCents, Currency.valueOf(qontoTransaction.localCurrency)),
-                attachmentIds = qontoTransaction.attachmentIds,
-                side = TransactionSide.valueOf(qontoTransaction.side.name),
-                operationType = TransactionOperationType.valueOf(qontoTransaction.operationType.name),
-                counterparty = qontoTransaction.counterparty,
-                settledDate = qontoTransaction.settledDate,
-                emittedDate = qontoTransaction.emittedDate,
-                updatedDate = qontoTransaction.updatedDate,
-                status = TransactionStatus.valueOf(qontoTransaction.status.name),
-                note = qontoTransaction.note,
-                reference = qontoTransaction.reference,
-                vatAmount = qontoTransaction.vatAmountCents?.let { centsToMonetaryAmount(it, Currency.valueOf(qontoTransaction.currency)) },
-                vatRate = TransactionVatRate.fromFloat(qontoTransaction.vatRate),
-                initiatorId = qontoTransaction.initiatorId,
-                labelIds = qontoTransaction.labelIds,
-                isAttachmentLost = qontoTransaction.attachmentLost,
-                isAttachmentRequired = qontoTransaction.attachmentRequired
-            )
+        try {
+            qontoClient.transactions.getTransactionList(
+                bankAccountSlug = bankAccountId,
+                pagination = Pagination(pageIndex, itemsPerPage),
+                status = statusFilter.map { Status.valueOf(it) }.toSet()
+            ).toConnection { qontoTransaction ->
+                Transaction(
+                    id = qontoTransaction.id,
+                    amount = centsToMonetaryAmount(qontoTransaction.amountCents, Currency.valueOf(qontoTransaction.currency)),
+                    localAmount = centsToMonetaryAmount(qontoTransaction.localAmountCents, Currency.valueOf(qontoTransaction.localCurrency)),
+                    attachmentIds = qontoTransaction.attachmentIds,
+                    side = TransactionSide.valueOf(qontoTransaction.side.name),
+                    operationType = TransactionOperationType.valueOf(qontoTransaction.operationType.name),
+                    counterparty = qontoTransaction.counterparty,
+                    settledDate = qontoTransaction.settledDate,
+                    emittedDate = qontoTransaction.emittedDate,
+                    updatedDate = qontoTransaction.updatedDate,
+                    status = TransactionStatus.valueOf(qontoTransaction.status.name),
+                    note = qontoTransaction.note,
+                    reference = qontoTransaction.reference,
+                    vatAmount = qontoTransaction.vatAmountCents?.let { centsToMonetaryAmount(it, Currency.valueOf(qontoTransaction.currency)) },
+                    vatRate = TransactionVatRate.fromFloat(qontoTransaction.vatRate),
+                    initiatorId = qontoTransaction.initiatorId,
+                    labelIds = qontoTransaction.labelIds,
+                    isAttachmentLost = qontoTransaction.attachmentLost,
+                    isAttachmentRequired = qontoTransaction.attachmentRequired
+                )
+            }
+        } catch (t: Throwable) {
+            // TODO This is a very crude way of analyzing the exception - this can only be improved
+            // after this issue is fixed: https://github.com/BoD/klibqonto/issues/1
+            if (t.message?.contains("404") == true) {
+                throw Exception("Unknown bankAccountId '$bankAccountId'")
+            }
+            throw t
         }
     }
 }

@@ -39,8 +39,9 @@ class QontoApi(authenticationInformation: AuthenticationInformation) {
             Authentication(
                 authenticationInformation.login,
                 authenticationInformation.secretKey
-            ),
-            HttpConfiguration(
+            )
+            // Uncomment this to use a proxy
+            , HttpConfiguration(
                 loggingLevel = HttpLoggingLevel.INFO,
                 httpProxy = HttpProxy("localhost", 8888)
             )
