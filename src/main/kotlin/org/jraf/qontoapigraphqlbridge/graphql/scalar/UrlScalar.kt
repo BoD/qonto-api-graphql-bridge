@@ -36,17 +36,3 @@ fun createUrlScalar(scalarTypeDefinition: ScalarTypeDefinition): GraphQLScalarTy
     .name(SCALAR_URL_NAME)
     .description(scalarTypeDefinition.description.getContent())
     .build()
-
-//object UrlScalarCoercing : Coercing<Date?, String?> {
-//    override fun parseValue(input: Any?): Date? {
-//        throw UnsupportedOperationException()
-//    }
-//
-//    override fun parseLiteral(input: Any?): Date? {
-//        throw UnsupportedOperationException()
-//    }
-//
-//    override fun serialize(dataFetcherResult: Any?): String? {
-//        return (dataFetcherResult as? Date)?.let { DATE_SERIALIZED_FORMAT.format(it) }
-//    }
-//}
