@@ -82,9 +82,11 @@ fun main() {
                     <body>
                     <h1>Qonto API GraphQL Bridge</h1>
                     Hello, World!<br>
-                    This bridge allows you to access the <a href="https://api-doc.qonto.eu/2.0/welcome/">Qonto API</a> using GraphQL.<br>
+                    This bridge allows you to access the <a href="https://api-doc.qonto.eu/2.0/welcome/">Qonto API</a> using <a href="https://graphql.org/">GraphQL</a>.<br>
                     <br>
                     The GraphQL endpoint is accessible <a href="graphql">here</a>.<br>
+                    <br>
+                    Note: authentication is header based, as documented <a href="https://api-doc.qonto.eu/2.0/welcome/authentication">here</a>.<br>
                     <br>
                     More information: <a href="https://github.com/BoD/qonto-api-graphql-bridge">project on Github</a> - Author: <a href="mailto:BoD@JRAF.org">BoD@JRAF.org</a>
                     </body></html>
