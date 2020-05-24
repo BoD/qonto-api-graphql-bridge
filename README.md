@@ -21,7 +21,116 @@ I recommend using the [ModHeader extension](https://bewisse.com/modheader/) to e
 ## Demo instance
 An instance is running [here](https://qonto-api-graphql-bridge.herokuapp.com/) for your convenience. Note that this is hosted on the
 free tier of Heroku so of course, do not use it for any kind of serious project, it's
-here for demonstration purposes only. 
+here for demonstration purposes only.
+
+## Example query
+Here's an example query demonstrating the service:
+
+```graphql
+fragment allPageInfo on PageInfo {
+  pageIndex
+  nextPageIndex
+  previousPageIndex
+}
+
+query {
+  organization {
+    id
+  }
+
+  bankAccounts {
+    id
+    iban
+    bic
+    currency
+    authorizedBalance {
+      currency
+      amount
+    }
+    balance {
+      currency
+      amount
+    }
+  }
+
+  labels(pageIndex: 1, itemsPerPage: 4) {
+    totalCount
+    nodes {
+      id
+      name
+      parentLabelId
+    }
+    pageInfo {
+      ...allPageInfo
+    }
+  }
+
+  members(pageIndex: 1, itemsPerPage: 4) {
+    totalCount
+    nodes {
+      firstName
+      lastName
+    }
+    pageInfo {
+      ...allPageInfo
+    }
+  }
+
+  transactions(
+    bankAccountId: "olinda-test-production-4155-bank-account-1",
+    pageIndex: 1,
+    itemsPerPage: 4,
+    statusFilter: [PENDING, REVERSED],
+    orderBy: {field: UPDATED_DATE, direction: ASC},
+    updatedDateFrom: "2020-01-01T00:00:00.000Z"
+    updatedDateTo: "2020-01-08T00:00:00.000Z"
+  ) {
+    totalCount
+    nodes {
+      id
+      status
+      counterparty
+      emittedDate
+      updatedDate
+      status
+      localAmount {
+        amount
+        currency
+      }
+      initiator {
+        firstName
+        lastName
+      }
+      labels {
+        name
+      }
+      attachments {
+        id
+        creationDate
+        fileName
+        size
+        contentType
+        url
+      }
+      vatRate
+      vatAmount {
+        amount
+        currency
+      }
+    }
+    pageInfo {
+      ...allPageInfo
+    }
+  }
+}
+```
+
+## A word on pagination
+Ideally, I would have preferred to implement [Relay cursor based pagination](https://relay.dev/graphql/connections.htm), but unfortunately
+this is not really practical as the underlying API uses page based pagination.
+
+Therefore, this bridge uses page based pagination as well.
+
 
 ## Licence
 Copyright (C) 2020-present Benoit 'BoD' Lubek (BoD@JRAF.org)
