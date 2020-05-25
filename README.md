@@ -132,7 +132,9 @@ this is not really practical as the underlying API uses page based pagination.
 Therefore, this bridge uses page based pagination as well.
 
 
-## Licence
+## Author and licence
+_Note: this project is not officially related to or endorsed by Qonto or Olinda SAS._
+
 Copyright (C) 2020-present Benoit 'BoD' Lubek (BoD@JRAF.org)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
