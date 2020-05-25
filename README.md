@@ -77,7 +77,7 @@ query {
   }
 
   transactions(
-    bankAccountId: "olinda-test-production-4155-bank-account-1",
+    bankAccountId: "zgluteks-inc-4242-bank-account-1",
     pageIndex: 1,
     itemsPerPage: 4,
     statusFilter: [PENDING, REVERSED],
