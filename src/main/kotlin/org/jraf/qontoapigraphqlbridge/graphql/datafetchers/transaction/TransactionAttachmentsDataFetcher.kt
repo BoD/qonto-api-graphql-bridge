@@ -29,6 +29,8 @@ import graphql.schema.DataFetcher
 import kotlinx.coroutines.runBlocking
 import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.qontoClient
 import org.jraf.qontoapigraphqlbridge.graphql.model.attachment.Attachment
+import org.jraf.qontoapigraphqlbridge.graphql.model.attachment.ProbativeAttachment
+import org.jraf.qontoapigraphqlbridge.graphql.model.attachment.ProbativeAttachmentStatus
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.Transaction
 
 const val DATA_FETCHER_TRANSACTION_ATTACHMENTS_NAME = "attachments"
@@ -45,7 +47,16 @@ val DATA_FETCHER_TRANSACTION_ATTACHMENTS = DataFetcher { env ->
                     fileName = qontoAttachment.fileName,
                     contentType = qontoAttachment.contentType,
                     size = qontoAttachment.size,
-                    url = qontoAttachment.url
+                    url = qontoAttachment.url,
+                    probativeAttachment = qontoAttachment.probativeAttachment.let {
+                        ProbativeAttachment(
+                            status = ProbativeAttachmentStatus.valueOf(it.status.name),
+                            fileName = it.fileName,
+                            size = it.size,
+                            contentType = it.contentType,
+                            url = it.url,
+                        )
+                    }
                 )
             }
     }

@@ -25,14 +25,10 @@
 
 package org.jraf.qontoapigraphqlbridge.graphql.model.attachment
 
-import java.util.Date
-
-data class Attachment(
-    val id: String,
-    val creationDate: Date,
-    val fileName: String,
-    val size: Long,
-    val contentType: String,
-    val url: String,
-    val probativeAttachment: ProbativeAttachment
+data class ProbativeAttachment(
+    val status: ProbativeAttachmentStatus,
+    val fileName: String?,
+    val size: Long?,
+    val contentType: String?,
+    val url: String?,
 )

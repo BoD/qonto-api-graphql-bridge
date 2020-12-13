@@ -325,6 +325,9 @@ Inside Qonto, attachments are files uploaded onto transactions by users.
 Attachments typically correspond to the invoice or receipt, and are used to justify
 the transactions from a bookkeeping standpoint.
 
+Probative attachment is another version of attachment, compliant with
+[PAdES](https://en.wikipedia.org/wiki/PAdES) standard.
+
 **Important**: for security reasons, the url you retrieve for each attachment is only
 valid for 30 minutes.  If you need to download the file after more than 30 minutes,
 you will need to perform another authenticated call in order to generate a new
@@ -347,8 +350,48 @@ type Attachment {
 
     "The URL where this attachement can be downloaded (valid for 30 minutes)"
     url: URL!
+
+    "Another version of attachment, compliant with [PAdES](https://en.wikipedia.org/wiki/PAdES) standard"
+    probativeAttachment: ProbativeAttachment
 }
 
+
+"""
+Probative attachment is another version of attachment, compliant with
+[PAdES](https://en.wikipedia.org/wiki/PAdES) standard.
+
+**Important**: for security reasons, the url you retrieve for each attachment is only
+valid for 30 minutes.  If you need to download the file after more than 30 minutes,
+you will need to perform another authenticated call in order to generate a new
+download URL.
+"""
+type ProbativeAttachment {
+    "Status of probative attachment"
+    status: ProbativeAttachmentStatus!
+
+    "File name. Non null only when status is AVAILABLE."
+    fileName: String
+
+    "Size in bytes. Non null only when status is AVAILABLE."
+    size: Int
+
+    "Content type, as defined by [RFC 2046](https://tools.ietf.org/html/rfc2046). Non null only when status is AVAILABLE."
+    contentType: String
+
+    "The URL where this probative attachement can be downloaded (valid for 30 minutes). Non null only when status is AVAILABLE."
+    url: URL
+}
+
+
+"""
+Probative attachment status.
+"""
+enum ProbativeAttachmentStatus {
+    PENDING
+    AVAILABLE
+    UNAVAILABLE
+    CORRUPTED
+}
 
 """
 A label is piece of information that can be attached to a transaction, as a way to
