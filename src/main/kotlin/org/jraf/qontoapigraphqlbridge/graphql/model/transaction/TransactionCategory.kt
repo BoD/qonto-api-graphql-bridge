@@ -25,28 +25,34 @@
 
 package org.jraf.qontoapigraphqlbridge.graphql.model.transaction
 
-import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
-import java.util.Date
-
-data class Transaction(
-    val id: String,
-    val amount: MonetaryAmount,
-    val localAmount: MonetaryAmount,
-    val attachmentIds: List<String>,
-    val side: TransactionSide,
-    val operationType: TransactionOperationType,
-    val counterparty: String,
-    val settledDate: Date?,
-    val emittedDate: Date,
-    val updatedDate: Date,
-    val status: TransactionStatus,
-    val category: TransactionCategory,
-    val note: String?,
-    val reference: String?,
-    val vatAmount: MonetaryAmount?,
-    val vatRate: TransactionVatRate?,
-    val initiatorId: String?,
-    val labelIds: List<String>,
-    val isAttachmentLost: Boolean,
-    val isAttachmentRequired: Boolean
-)
+enum class TransactionCategory {
+    ATM,
+    FEES,
+    FINANCE,
+    FOOD_AND_GROCERY,
+    GAS_STATION,
+    HARDWARE_AND_EQUIPMENT,
+    HOTEL_AND_LODGING,
+    INSURANCE,
+    IT_AND_ELECTRONICS,
+    LEGAL_AND_ACCOUNTING,
+    LOGISTICS,
+    MANUFACTURING,
+    MARKETING,
+    OFFICE_RENTAL,
+    OFFICE_SUPPLY,
+    ONLINE_SERVICE,
+    OTHER_EXPENSE,
+    OTHER_INCOME,
+    OTHER_SERVICE,
+    REFUND,
+    RESTAURANT_AND_BAR,
+    SALARY,
+    SALES,
+    SUBSCRIPTION,
+    TAX,
+    TRANSPORT,
+    TREASURY_AND_INTERCO,
+    UTILITY,
+    VOUCHER,
+}

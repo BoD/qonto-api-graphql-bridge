@@ -41,6 +41,7 @@ import org.jraf.qontoapigraphqlbridge.graphql.datafetchers.toConnection
 import org.jraf.qontoapigraphqlbridge.graphql.model.lists.OrderDirection
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.Transaction
+import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionCategory
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionOperationType
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionSide
 import org.jraf.qontoapigraphqlbridge.graphql.model.transaction.TransactionStatus
@@ -87,6 +88,7 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
                     emittedDate = qontoTransaction.emittedDate,
                     updatedDate = qontoTransaction.updatedDate,
                     status = TransactionStatus.valueOf(qontoTransaction.status.name),
+                    category = TransactionCategory.valueOf(qontoTransaction.category.name),
                     note = qontoTransaction.note,
                     reference = qontoTransaction.reference,
                     vatAmount = qontoTransaction.vatAmountCents?.let { centsToMonetaryAmount(it, Currency.valueOf(qontoTransaction.currency)) },

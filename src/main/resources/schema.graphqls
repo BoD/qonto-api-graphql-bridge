@@ -247,6 +247,42 @@ enum TransactionStatus {
 
 
 """
+Category of a transaction.
+"""
+enum TransactionCategory {
+    ATM
+    FEES
+    FINANCE
+    FOOD_AND_GROCERY
+    GAS_STATION
+    HARDWARE_AND_EQUIPMENT
+    HOTEL_AND_LODGING
+    INSURANCE
+    IT_AND_ELECTRONICS
+    LEGAL_AND_ACCOUNTING
+    LOGISTICS
+    MANUFACTURING
+    MARKETING
+    OFFICE_RENTAL
+    OFFICE_SUPPLY
+    ONLINE_SERVICE
+    OTHER_EXPENSE
+    OTHER_INCOME
+    OTHER_SERVICE
+    REFUND
+    RESTAURANT_AND_BAR
+    SALARY
+    SALES
+    SUBSCRIPTION
+    TAX
+    TRANSPORT
+    TREASURY_AND_INTERCO
+    UTILITY
+    VOUCHER
+}
+
+
+"""
 Possible VAT rates.
 """
 enum TransactionVatRate {
@@ -422,6 +458,9 @@ type Transaction {
 
     "Status"
     status: TransactionStatus!
+
+    "Category"
+    category: TransactionCategory!
 
     "Memo added by the user on the transaction"
     note: String
