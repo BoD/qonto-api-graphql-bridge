@@ -463,6 +463,8 @@ type BankAccount {
 
     "Amount of money available for payment from the account"
     authorizedBalance: MonetaryAmount!
+
+    updatedDate: Timestamp!
 }
 
 
@@ -534,6 +536,9 @@ type Transaction {
 
     "Indicates if the transaction's attachment is required (default: true)"
     isAttachmentRequired: Boolean
+
+    "If this transaction's operationType is CARD, this will contain the card's last few digits, or null otherwise."
+    cardLastDigits: String
 }
 
 

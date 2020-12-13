@@ -43,7 +43,8 @@ val DATA_FETCHER_BANK_ACCOUNTS = DataFetcher { env ->
                 bic = qontoBankAccount.bic,
                 currency = Currency.valueOf(qontoBankAccount.currency),
                 balance = centsToMonetaryAmount(qontoBankAccount.balanceCents, Currency.EUR),
-                authorizedBalance = centsToMonetaryAmount(qontoBankAccount.authorizedBalanceCents, Currency.EUR)
+                authorizedBalance = centsToMonetaryAmount(qontoBankAccount.authorizedBalanceCents, Currency.EUR),
+                updatedDate = qontoBankAccount.updatedDate,
             )
         }
     }

@@ -96,7 +96,8 @@ val DATA_FETCHER_TRANSACTIONS = DataFetcher { env ->
                     initiatorId = qontoTransaction.initiatorId,
                     labelIds = qontoTransaction.labelIds,
                     isAttachmentLost = qontoTransaction.attachmentLost,
-                    isAttachmentRequired = qontoTransaction.attachmentRequired
+                    isAttachmentRequired = qontoTransaction.attachmentRequired,
+                    cardLastDigits = qontoTransaction.cardLastDigits,
                 )
             }
         } catch (t: Throwable) {

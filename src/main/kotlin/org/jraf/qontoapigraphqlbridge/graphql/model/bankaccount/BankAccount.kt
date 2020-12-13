@@ -27,6 +27,7 @@ package org.jraf.qontoapigraphqlbridge.graphql.model.bankaccount
 
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.Currency
 import org.jraf.qontoapigraphqlbridge.graphql.model.money.MonetaryAmount
+import java.util.Date
 
 data class BankAccount(
     val id: String,
@@ -34,5 +35,6 @@ data class BankAccount(
     val bic: String,
     val currency: Currency,
     val balance: MonetaryAmount,
-    val authorizedBalance: MonetaryAmount
+    val authorizedBalance: MonetaryAmount,
+    val updatedDate: Date,
 )

@@ -48,5 +48,6 @@ data class Transaction(
     val initiatorId: String?,
     val labelIds: List<String>,
     val isAttachmentLost: Boolean,
-    val isAttachmentRequired: Boolean
+    val isAttachmentRequired: Boolean,
+    val cardLastDigits: String?
 )
