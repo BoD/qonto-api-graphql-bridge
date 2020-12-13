@@ -25,4 +25,7 @@
 
 package org.jraf.qontoapigraphqlbridge.graphql.model.organization
 
-data class Organization(val id: String)
+data class Organization(
+    val id: String,
+    val legalName: String,
+)

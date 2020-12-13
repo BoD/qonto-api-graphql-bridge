@@ -34,6 +34,10 @@ const val DATA_FETCHER_ORGANIZATION_NAME = "organization"
 
 val DATA_FETCHER_ORGANIZATION = DataFetcher { env ->
     runBlocking {
-        Organization(id = env.qontoClient.organizations.getOrganization().slug)
+        val organization = env.qontoClient.organizations.getOrganization()
+        Organization(
+            id = organization.slug,
+            legalName = organization.legalName,
+        )
     }
 }

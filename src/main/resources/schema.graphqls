@@ -433,6 +433,8 @@ Information about the organization.
 """
 type Organization {
     id: ID!
+
+    legalName: String!
 }
 
 
