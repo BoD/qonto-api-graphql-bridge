@@ -25,6 +25,8 @@
 
 package org.jraf.qontoapigraphqlbridge.main
 
+import graphql.ExecutionInput
+import graphql.GraphQL
 import graphql.schema.GraphQLSchema
 import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.call
@@ -42,7 +44,8 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import ktor.graphql.config
+import ktor.graphql.Config
+import ktor.graphql.fromRequest
 import ktor.graphql.graphQL
 import org.jraf.qontoapigraphqlbridge.auth.AUTH_KEY
 import org.jraf.qontoapigraphqlbridge.auth.AuthenticationInformation
@@ -54,7 +57,9 @@ private const val DEFAULT_PORT = 8042
 private const val ENV_PORT = "PORT"
 private const val APP_URL = "https://qonto-api-graphql-bridge.herokuapp.com"
 
-val schema: GraphQLSchema = QontoApiSchema().schema
+private val schema: GraphQLSchema = QontoApiSchema().schema
+private val graphql = GraphQL.newGraphQL(schema).build()
+
 
 fun main() {
     val listenPort = System.getenv(ENV_PORT)?.toInt() ?: DEFAULT_PORT
@@ -94,11 +99,17 @@ fun main() {
                 )
             }
 
-            graphQL("/graphql", schema) {
-                config {
-                    graphiql = true
-                    context = Context(call.getAuthenticationInformation())
-                }
+            graphQL("/graphql", schema) { request ->
+                Config(
+                    showExplorer = true,
+                    executeRequest = {
+                        val input = ExecutionInput
+                            .newExecutionInput()
+                            .fromRequest(request)
+                            .context(Context(call.getAuthenticationInformation()))
+                        graphql.execute(input)
+                    }
+                )
             }.apply {
                 // Handle authentication
                 intercept(ApplicationCallPipeline.Call) {
